@@ -33,17 +33,18 @@
 ```bash
 git clone https://github.com/yourusername/student-management-system.git
 cd student-management-system
-2. 安装 Python 依赖
+```
+### 2. 安装 Python 依赖
 bash
 pip install -r requirements.txt
-3. 安装 MySQL
+### 3. 安装 MySQL
 Windows: 下载并安装 MySQL Installer
 
 macOS: brew install mysql
 
 Ubuntu/Debian: sudo apt-get install mysql-server
 
-4. 配置数据库
+### 4. 配置数据库
 启动 MySQL 服务
 
 编辑配置文件：
@@ -60,7 +61,7 @@ DB_CONFIG = {
     'passwd': 'your_password_here',
     'charset': 'utf8mb4'
 }
-5. 运行程序
+### 5. 运行程序
 bash
 # 方式一：直接运行主程序
 python src/student_management.py
