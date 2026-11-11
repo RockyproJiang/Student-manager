@@ -7,6 +7,7 @@ import sys
 import os
 
 # 添加 src 目录到 Python 路径
+sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 from student_management import Student_man_sys

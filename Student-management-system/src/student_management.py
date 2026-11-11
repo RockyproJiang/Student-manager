@@ -1,17 +1,25 @@
+import os
 import pymysql
 import tkinter as tk
 from tkinter import ttk, messagebox
 
+try:
+    from config import DB_CONFIG
+except ModuleNotFoundError:
+    # 兼容直接运行 `python src/student_management.py`：把上一级目录加入搜索路径
+    import sys as _sys
+    _sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from config import DB_CONFIG
+
 
 class Student_man_sys:
     def __init__(self):
-        self.db_config = {
-            'host': 'localhost',
-            'port': 3306,
-            'user': 'root',
-            'passwd': '****',#换成自己的mysql账号密码
-            'charset': 'utf8'
-        }
+        # 数据库连接参数取自 config.py，并允许用环境变量覆盖（避免把密码写死在代码里）。
+        self.db_config = dict(DB_CONFIG)
+        self.db_config['host'] = os.environ.get('MYSQL_HOST', self.db_config['host'])
+        self.db_config['port'] = int(os.environ.get('MYSQL_PORT', self.db_config['port']))
+        self.db_config['user'] = os.environ.get('MYSQL_USER', self.db_config['user'])
+        self.db_config['passwd'] = os.environ.get('MYSQL_PASSWORD', self.db_config['passwd'])
         self.database_name = "student_manage"
         self.create_database()
         

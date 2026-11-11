@@ -1,97 +1,62 @@
-[README.md](https://github.com/user-attachments/files/24157700/README.md)
-# 学生管理系统 (Student Management System)
+# Student-manager
 
-![Python Version](https://img.shields.io/badge/python-3.7%2B-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
-![MySQL](https://img.shields.io/badge/database-MySQL-orange)
-
-一个基于 Python 和 MySQL 的学生信息管理系统，使用 Tkinter 构建图形界面。
+基于 Python Tkinter + MySQL 的桌面学生信息管理系统，支持用户注册登录、学生信息新增与按姓名/学号/年龄多条件组合搜索。
 
 ## 功能特性
 
-- ✅ 用户注册和登录系统
-- ✅ 学生信息的增删改查
-- ✅ 多条件搜索和筛选
-- ✅ 美观的用户界面
-- ✅ MySQL 数据库支持
+- 用户注册与登录，登录账号存于 MySQL `login_table`（密码以明文存储，详见配置与安全说明）
+- 学生信息新增（`show_add_dialog`）
+- 学生列表加载与展示（`load_students`）
+- 多条件组合搜索（`search_students`）：姓名、学号使用 `LIKE` 模糊匹配，年龄为精确匹配，条件以 `AND` 组合
+- 程序启动时自动创建数据库 `student_manage` 及 `login_table`、`info_table` 两张表，无需手动建库建表
+- Tkinter 桌面界面，连接参数集中在 `config.py` 并支持环境变量覆盖
 
-## 界面预览
-doc/main_page
-doc/database
+## 技术栈与依赖
 
-## 系统要求
+- Python 3、Tkinter（图形界面，随 Python 自带）、PyMySQL==1.0.2
+- MySQL 5.7+（需本机或可访问的 MySQL 服务，账号需具备建库权限）
+- 第三方依赖见 `Student-management-system/requirements.txt`：pymysql==1.0.2
 
-- Python 3.7 或更高版本
-- MySQL 5.7 或更高版本
-- Tkinter（通常随 Python 安装）
+## 目录结构
 
-## 安装步骤
+```text
+Student-manager/
+├── README.md                          # 项目完整说明（GitHub 仓库首页展示）
+├── LICENSE                            # MIT 许可证
+├── .gitignore
+└── Student-management-system/         # 实际项目代码所在子目录
+    ├── run.py                         # 程序入口
+    ├── config.py                      # 数据库连接配置 DB_CONFIG
+    ├── requirements.txt               # pymysql==1.0.2
+    ├── setup.py                       # 占位文件（内容为空）
+    ├── README.md                      # 内层简短指引
+    ├── LICENSE.txt                    # 子目录许可证
+    ├── doc/
+    │   ├── database.png               # 数据库相关截图
+    │   └── main_page.png              # 主界面截图
+    └── src/
+        └── student_management.py      # 主程序：界面与数据库业务逻辑
+```
 
-### 1. 克隆仓库
-git clone https://github.com/yourusername/student-management-system.git
-cd student-management-system
-2. 安装 Python 依赖
-bash
+## 快速开始
+
+先确保 MySQL 5.7+ 已安装并启动，然后：
+
+```bash
+git clone https://github.com/RockyproJiang/Student-manager.git
+cd Student-manager/Student-management-system
 pip install -r requirements.txt
-3. 安装 MySQL
-Windows: 下载并安装 MySQL Installer
+python run.py
+```
 
-macOS: brew install mysql
+## 配置与安全说明
 
-Ubuntu/Debian: sudo apt-get install mysql-server
+- 数据库连接参数位于 `config.py` 的 `DB_CONFIG`，支持环境变量覆盖：`MYSQL_HOST`、`MYSQL_PORT`、`MYSQL_USER`、`MYSQL_PASSWORD`。
+- **不要把真实密码写进代码或提交仓库**；密码请通过 `MYSQL_PASSWORD` 环境变量提供，并使用最小权限的数据库账号。
+- 程序启动会自动创建数据库 `student_manage` 与 `login_table`（登录用户表）、`info_table`（学生信息表）。
+- **安全说明（重要）**：登录密码以**明文**存于 `login_table.st_password`，登录时以明文比对，仅用于本地学习演示，**切勿用于生产环境、不要使用真实密码**。正式使用应改为加盐哈希（如 bcrypt / argon2），并使用最小权限数据库账号与参数化查询。
+- 子目录 `Student-management-system/README.md` 仅提供简短运行指引，完整文档以仓库根目录的本文件为准。
 
-4. 配置数据库
-启动 MySQL 服务
+## 许可证
 
-编辑配置文件：
-
-bash
-cp config.py.example config.py
-修改 config.py 中的数据库配置：
-
-python
-DB_CONFIG = {
-    'host': 'localhost',
-    'port': 3306,
-    'user': 'root',
-    'passwd': 'your_password_here',
-    'charset': 'utf8mb4'
-}
-5. 运行程序
-bash
-# 方式一：直接运行主程序
-python src/student_management.py
-
-点击"注册账号"按钮
-
-输入用户名和密码（用户名至少3字符，密码至少4字符）
-
-点击"注册"完成
-
-登录系统
-输入注册的用户名和密码
-
-点击"登录系统"或按回车键
-
-管理学生信息
-添加学生：点击工具栏的"＋ 添加学生"按钮
-
-搜索学生：使用姓名、学号、年龄进行搜索
-
-刷新数据：点击"刷新"按钮或右键菜单
-
-
-数据库结构
-用户表 (login_table)
-字段名	类型	说明
-id	INT	主键，自增
-st_username	VARCHAR(50)	用户名，唯一
-st_password	VARCHAR(255)	密码
-created_at	TIMESTAMP	创建时间
-学生信息表 (info_table)
-字段名	类型	说明
-id	INT	主键，自增
-student_name	VARCHAR(50)	学生姓名
-student_id	VARCHAR(20)	学号，唯一
-student_age	INT	年龄
-created_at	TIMESTAMP	创建时间
+本项目采用 MIT 许可证，详见 LICENSE（子目录另附 LICENSE.txt）。
